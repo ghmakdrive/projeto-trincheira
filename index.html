@@ -1,0 +1,1973 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projeto Trincheira — Madruga</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/split-type"></script>
+<style>
+  /* ══════════════════════════════════════════════════════════════════════════════
+     DESIGN SYSTEM
+     ══════════════════════════════════════════════════════════════════════════════ */
+  
+  :root {
+    /* Colors */
+    --black: #080a08;
+    --green: #c8f135;
+    --green-dark: #9bbf1a;
+    --white: #f4f4ef;
+    --gray: #1a1d1a;
+    --gray-mid: #2e322e;
+    --text-muted: #7a817a;
+    
+    /* Layout */
+    --max-width: 1280px;
+    --mobile-padding: 12px;
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════════════
+     RESET & BASE
+     ══════════════════════════════════════════════════════════════════════════════ */
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  html { scroll-behavior: smooth; }
+  
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════════════
+     NOISE OVERLAY
+     ══════════════════════════════════════════════════════════════════════════════ */
+  
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.35;
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════════════
+     HEADER / TOPBAR
+     ══════════════════════════════════════════════════════════════════════════════ */
+  
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 5%;
+    border-bottom: 1px solid #1e221e;
+    position: sticky;
+    top: 0;
+    background: rgba(8,10,8,0.92);
+    backdrop-filter: blur(12px);
+    z-index: 100;
+  }
+
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 0.1em;
+    color: var(--green);
+  }
+
+  .topbar-cta {
+    background: var(--green);
+    color: var(--black);
+    padding: 10px 22px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .topbar-cta:hover { 
+    background: var(--green-dark); 
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════════════
+     HERO SECTION
+     ══════════════════════════════════════════════════════════════════════════════ */
+  
+  .hero {
+    min-height: 850px;
+    max-height: 850px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 0px !important;
+    gap: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-inner {
+    min-height: 850px;
+    max-height: 850px;
+    width: 1280px !important;
+    padding: 0px 0px !important;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Hero Left */
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 5% 80px 6%;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .hero-tag::before {
+    content: '';
+    display: inline-block;
+    width: 28px;
+    height: 1px;
+    background: var(--green);
+  }
+
+  .hero-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    line-height: 1;
+    letter-spacing: 0.05em;
+    color: var(--green);
+    margin-bottom: 32px;
+    opacity: 0.9;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 58px;
+    line-height: 1em;
+    letter-spacing: 0.01em;
+    color: var(--white);
+    margin-bottom: 32px;
+    max-width: 560px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .hero-title strong { 
+    color: var(--green);
+    font-weight: inherit;
+    display: flex !important;
+    gap: 12px;
+    flex-wrap: wrap;
+    width: auto;
+  }
+
+  .cta-block { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 14px; 
+    max-width: 380px; 
+  }
+
+  .btn-primary {
+    background: var(--green);
+    color: var(--black);
+    padding: 18px 32px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.1);
+    transform: translateX(-100%);
+    transition: transform 0.3s;
+  }
+  
+  .btn-primary:hover::after { 
+    transform: translateX(0); 
+  }
+  
+  .btn-primary:hover { 
+    transform: translateY(-2px); 
+    box-shadow: 0 8px 32px rgba(200,241,53,0.25); 
+  }
+
+  .btn-arrow { 
+    font-size: 1.1rem; 
+    transition: transform 0.2s; 
+  }
+  
+  .btn-primary:hover .btn-arrow { 
+    transform: translateX(4px); 
+  }
+
+  .free-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  
+  .free-badge span { 
+    color: var(--green); 
+  }
+
+  /* Hero Right - Visual */
+  .hero-right {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-visual {
+    position: absolute;
+    border: 1px solid #202e1384;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%,-50%);
+    height: 700px;
+    width: 640px;
+    inset: 0;
+    background: linear-gradient(135deg, #0d1a0d 0%, #080a08 100%);
+  }
+
+  .hero-visual img {
+    width: 100%;
+    height: 100%;
+  }
+
+/* Adicione esta nova animação ao seu CSS. 
+   O espaço longo entre 15% e 95% mantém a imagem visível a maior parte do tempo, 
+   fazendo os "piscos" parecerem mais naturais e menos enjoativos. */
+@keyframes piscar-aleatorio {
+  0%   { opacity: 1; }
+  2%   { opacity: 0.5; }
+  3%   { opacity: 1; filter: brightness(1.5); } /* Dá um leve clarão rápido */
+  5%   { opacity: 0.2; }
+  7%   { opacity: 1; }
+  12%  { opacity: 0.8; }
+  13%  { opacity: 0.4; }
+  15%  { opacity: 1; }
+  95%  { opacity: 1; }
+  97%  { opacity: 0.4; }
+  100% { opacity: 1; }
+}
+
+/* Atualize a classe principal para incluir a animação */
+.glitch-img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: url('https://opcoescommadruga.com.br/wp-content/uploads/2026/05/foto_madruga.webp');
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  
+  /* Aqui você chama a animação de piscar. 
+     Aumente ou diminua os 4s para deixar o efeito mais ou menos frequente */
+  animation: piscar-aleatorio 4s infinite; 
+}
+
+/* O restante do código continua igualzinho: */
+
+.glitch-img::before,
+.glitch-img::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: inherit;
+  background-size: cover;
+  background-position: center;
+}
+
+.glitch-img::before {
+  left: 6px;
+  animation: ruido-img-1 8s infinite linear alternate-reverse;
+  opacity: 0.8;
+  filter: hue-rotate(90deg);
+}
+
+.glitch-img::after {
+  left: -6px;
+  animation: ruido-img-2 8s infinite linear alternate-reverse;
+  opacity: 0.8;
+  filter: hue-rotate(-90deg);
+}
+
+@keyframes ruido-img-1 {
+  0% { clip-path: inset(20% 0 80% 0); transform: translate(-2px, 1px); }
+  20% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -1px); }
+  40% { clip-path: inset(40% 0 50% 0); transform: translate(-2px, 2px); }
+  60% { clip-path: inset(80% 0 5% 0); transform: translate(2px, -2px); }
+  80% { clip-path: inset(10% 0 70% 0); transform: translate(-1px, 1px); }
+  100% { clip-path: inset(30% 0 20% 0); transform: translate(1px, -1px); }
+}
+
+@keyframes ruido-img-2 {
+  0% { clip-path: inset(10% 0 60% 0); transform: translate(2px, -1px); }
+  20% { clip-path: inset(30% 0 20% 0); transform: translate(-2px, 1px); }
+  40% { clip-path: inset(70% 0 10% 0); transform: translate(2px, 2px); }
+  60% { clip-path: inset(20% 0 50% 0); transform: translate(-2px, -2px); }
+  80% { clip-path: inset(50% 0 30% 0); transform: translate(1px, 1px); }
+  100% { clip-path: inset(5% 0 80% 0); transform: translate(-1px, -1px); }
+}
+
+  .hero-grid-lines {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(200,241,53,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(200,241,53,0.06) 1px, transparent 1px);
+    background-size: 53.5px 53.5px;
+    animation: gridScroll 12s linear infinite;
+  }
+
+  @keyframes gridScroll {
+    0%, 100% { background-position: 0 0; }
+    50% { background-position: 0 48px; }
+  }
+
+  .chart-container {
+    position: absolute;
+    z-index: 100;
+    animation: blur 10s infinite;
+    bottom: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+  }
+
+  @keyframes blur {
+    0%, 100% {
+      filter: blur(0px);
+      opacity: 100%;
+    }
+    50% {
+      filter: blur(2px);
+      opacity: 70%;
+    }
+  }
+
+  .chart-svg { 
+    width: 100%; 
+    height: auto; 
+  }
+
+  .stats-float {
+    position: absolute;
+    top: 24%;
+    right: 5%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .stat-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(200,241,53,0.15);
+    padding: 14px 20px;
+    backdrop-filter: blur(8px);
+    animation: floatIn 0.6s ease both;
+  }
+  
+  .stat-card:nth-child(1) { animation-delay: 0.8s; }
+  .stat-card:nth-child(2) { animation-delay: 1.1s; }
+  .stat-card:nth-child(3) { animation-delay: 1.4s; }
+
+  @keyframes floatIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .stat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 0px;
+  }
+
+  .stat-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    color: var(--green);
+    letter-spacing: 0.05em;
+    margin-top: -5.5px;
+    margin-bottom: 2px;
+    height: 34px;
+  }
+
+  .date-badge {
+    position: absolute;
+    top: 18%;
+    left: -9%;
+    background: rgba(0,0,0,0.2);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--green);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: 1px solid rgba(200,241,53,0.3);
+    padding: 8px 14px;
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    animation: floatIn 0.6s ease 0.5s both;
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════════════
+     DIVIDER TICKER
+     ══════════════════════════════════════════════════════════════════════════════ */
+  
+  .divider-strip {
+    background: var(--green);
+    padding: 14px 5%;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .ticker {
+    display: inline-block;
+    animation: ticker 20s linear infinite;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.15em;
+    color: var(--black);
+  }
+
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════════════
+     SECTIONS BASE
+     ══════════════════════════════════════════════════════════════════════════════ */
+  
+  section { 
+    padding: 140px 5%; 
+  }
+
+  .section-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 1;
+    letter-spacing: 0.02em;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .word {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+  }
+
+  .section-title em {
+    font-style: normal;
+    color: var(--green);
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════════════
+     PROBLEMA SECTION
+     ══════════════════════════════════════════════════════════════════════════════ */
+  
+  .problema { 
+    background: #131513; 
+  }
+
+  .problema .section-title {
+    width: 500px;
+  }
+
+  .problema-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .pain-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 32px;
+  }
+
+  .pain-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    border-left: 2px solid rgba(200,241,54,1);
+    background: rgba(0,0,0,0.2);
+    overflow: hidden;
+  }
+
+  .pain-item:before {
+    content: "";
+    filter: blur(20px);
+    position: absolute;
+    height: 100%;
+    width: 300px;
+    left: -150px;
+    top: 0;
+    opacity: 20%;
+    background: linear-gradient(to right, rgba(200,241,54,1), transparent);
+  }
+
+  .pain-icon {
+    width: 32px;
+    height: 32px;
+    background: rgba(200,241,53,0.1);
+    border: 1px solid rgba(200,241,53,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.85rem;
+  }
+
+  .pain-text { 
+    font-size: 0.95rem; 
+    color: #c0c8c0; 
+    line-height: 1.6; 
+  }
+  
+  .pain-text strong { 
+    color: var(--green); 
+  }
+
+  .problema-right {
+    position: relative;
+  }
+
+  .big-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(5rem, 12vw, 10rem);
+    line-height: 1;
+    color: rgba(200,241,53,0.08);
+    position: absolute;
+    top: -40px;
+    right: 0;
+    pointer-events: none;
+  }
+
+  .quote-block {
+    position: absolute;
+    left: 90px;
+    top: 85%;
+    border-left: 3px solid var(--green);
+    padding: 28px 32px;
+    background: rgba(200,241,53,0.04);
+    margin-top: 20px;
+  }
+
+  .quote-text {
+    font-size: 1.25rem;
+    font-weight: 300;
+    color: var(--white);
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  .quote-text strong { 
+    font-weight: 600; 
+    font-style: normal; 
+    color: var(--green); 
+  }
+
+  .quote-author {
+    margin-top: 20px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════════════
+     PROJETO SECTION
+     ══════════════════════════════════════════════════════════════════════════════ */
+  
+  .projeto { 
+    background: var(--black); 
+  }
+
+  .projeto .section-title { 
+    margin-bottom: -10px !important; 
+    width: 380px;
+  }
+
+  .projeto-inner { 
+    max-width: 1200px; 
+    margin: 0 auto; 
+  }
+
+  .projeto-header { 
+    margin-bottom: 64px; 
+  }
+
+  .projeto-header-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: flex-end;
+  }
+
+  .projeto-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-bottom: 64px;
+  }
+
+  .proj-card {
+    background: var(--gray);
+    padding: 36px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .proj-card::before {
+    content: '';
+    position: absolute;
+    top: 0; 
+    left: 0; 
+    right: 0;
+    height: 2px;
+    background: var(--green);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+
+  .proj-card:hover::before { 
+    transform: scaleX(1); 
+  }
+
+  .proj-card-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.5rem;
+    color: rgba(200,241,53,0.12);
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .proj-card-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 0.05em;
+    color: var(--white);
+    margin-bottom: 10px;
+  }
+
+  .proj-card-desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .proj-card-tag {
+    display: inline-block;
+    margin-top: 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--green);
+    border: 1px solid rgba(200,241,53,0.3);
+    padding: 4px 10px;
+  }
+
+  /* Schedule Block - Timeline */
+  .schedule-block {
+    background: rgba(200,241,53,0.04);
+    border: 1px solid rgba(200,241,53,0.1);
+    padding: 40px;
+    margin-top: 48px;
+  }
+
+  .schedule-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    color: var(--green);
+    margin-bottom: 48px;
+    letter-spacing: 0.05em;
+    display: flex;
+    gap: 5px;
+  }
+
+  /* Timeline Container */
+  .timeline-container {
+    position: relative;
+    padding-left: 80px;
+    margin-bottom: 40px;
+  }
+
+  /* Linha vertical da timeline */
+  .timeline-container::before {
+    content: '';
+    position: absolute;
+    left: 28px;
+    top: 8px;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, 
+      rgba(200,241,53,0.5) 0%, 
+      rgba(200,241,53,0) 100%);
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 32px;
+    padding-left: 40px;
+  }
+
+  .timeline-item:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Ponto/dot da timeline */
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -60px;
+    top: 4px;
+    width: 12px;
+    height: 12px;
+    background: var(--green);
+    border-radius: 50%;
+    border: 3px solid rgba(200,241,53,0.2);
+    box-shadow: 0 0 0 4px rgba(200,241,53,0.1);
+  }
+
+  .timeline-time {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--green);
+    background: rgba(200,241,53,0.1);
+    padding: 6px 12px;
+    letter-spacing: 0.05em;
+    display: inline-block;
+    margin-bottom: 8px;
+  }
+
+  .timeline-content strong {
+    color: var(--white);
+    display: block;
+    margin-bottom: 4px;
+    font-size: 1rem;
+  }
+
+  .timeline-content {
+    font-size: 0.9rem;
+    color: #a8b0a8;
+    line-height: 1.6;
+  }
+
+  /* Daily Item - Fora da timeline */
+  .daily-item {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(200,241,53,0.15);
+    padding: 24px 28px;
+    margin-top: 32px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .daily-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--green);
+    background: rgba(200,241,53,0.1);
+    padding: 8px 14px;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .daily-content {
+    font-size: 0.9rem;
+    color: #a8b0a8;
+    line-height: 1.6;
+  }
+
+  .daily-content strong {
+    color: var(--white);
+    display: block;
+    margin-bottom: 4px;
+    font-size: 1rem;
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════════════
+     QUEM É SECTION
+     ══════════════════════════════════════════════════════════════════════════════ */
+  
+  .quem { 
+    background: #131513; 
+  }
+
+  .quem .section-title {
+    display: flex;
+    gap: 12px;
+  }
+
+  .quem-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 80px;
+    align-items: center;
+    max-width: 1100px;
+    margin: 60px auto 0;
+  }
+
+  .avatar-block {
+    position: relative;
+    flex-shrink: 0;
+    width: 340px;
+  }
+
+  .avatar-img {
+    width: 260px;
+    height: 320px;
+    object-fit: cover;
+    filter: grayscale(20%);
+    display: block;
+  }
+
+  .avatar-placeholder {
+    width: 340px;
+    height: 520px;
+    background: url("https://opcoescommadruga.com.br/wp-content/uploads/2026/05/rosto_madruga.webp");
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 5rem;
+    color: rgba(200,241,53,0.2);
+    border: 1px solid #2e322e;
+  }
+
+  .avatar-tag {
+    position: absolute;
+    bottom: -12px;
+    right: -12px;
+    background: var(--green);
+    color: var(--black);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 10px 14px;
+  }
+
+  .bio-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .bio-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--green);
+    border: 1px solid rgba(200,241,53,0.3);
+    padding: 5px 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .bio-text {
+    font-size: 1.05rem;
+    color: #c0c8c0;
+    line-height: 1.75;
+    font-weight: 300;
+  }
+
+  .bio-text strong { 
+    color: var(--white); 
+    font-weight: 600; 
+  }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 36px;
+  }
+
+  .stat-box {
+    background: rgba(0,0,0,0.3);
+    padding: 20px;
+    text-align: center;
+  }
+
+  .stat-n {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.8rem;
+    color: var(--green);
+    display: block;
+  }
+
+  .stat-l {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════════════
+     OFERTA SECTION
+     ══════════════════════════════════════════════════════════════════════════════ */
+  
+  .oferta { 
+    background: var(--black); 
+  }
+
+  .oferta .section-title {
+    justify-content: center;
+    width: 300px;
+  }
+
+  .oferta .section-title em {
+    display: flex !important;
+    gap: 12px !important;
+    align-items: center !important;
+  }
+
+  .oferta-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .price-reveal {
+    margin: 48px 0;
+    padding: 48px;
+    width: 700px !important;
+    border: 1px solid rgba(200,241,53,0.15);
+    background: rgba(200,241,53,0.03);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .price-free {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 8vw, 6rem);
+    color: var(--green);
+    letter-spacing: 0.05em;
+    display: block;
+    line-height: 1;
+  }
+
+  .price-sub {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-top: 8px;
+    letter-spacing: 0.05em;
+  }
+
+  .price-divider {
+    width: 40px;
+    height: 1px;
+    background: rgba(200,241,53,0.3);
+    margin: 24px auto;
+  }
+
+  .what-you-get {
+    list-style: none;
+    text-align: left;
+    max-width: 520px;
+    margin: 0 auto 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .wyg-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.95rem;
+    color: #c0c8c0;
+  }
+
+  .wyg-icon {
+    width: 20px;
+    height: 20px;
+    background: var(--green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.65rem;
+    color: var(--black);
+    font-weight: 700;
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════════════
+     URGÊNCIA STRIP
+     ══════════════════════════════════════════════════════════════════════════════ */
+  
+  .urgencia-strip {
+    background: var(--green);
+    padding: 24px 5%;
+    text-align: center;
+  }
+
+  .urgencia-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(1.2rem, 3vw, 2rem);
+    color: var(--black);
+    letter-spacing: 0.05em;
+  }
+
+  .urgencia-text span {
+    display: inline-block;
+    background: var(--black);
+    color: var(--green);
+    padding: 0 12px;
+    margin: 0 4px;
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════════════
+     FINAL CTA
+     ══════════════════════════════════════════════════════════════════════════════ */
+  
+  .final-cta {
+    background: var(--black);
+    padding: 120px 5%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .final-cta .section-title { 
+    font-size: clamp(3rem, 7vw, 6rem); 
+    margin-bottom: 32px; 
+  }
+
+  .final-cta .btn-primary {
+    font-size: 1rem;
+    padding: 22px 48px;
+    margin: 0 auto;
+    display: inline-flex;
+    width: 100%;
+  }
+
+  .final-disclaimer {
+    margin-top: 20px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* Form Inputs */
+  .form-input {
+    background: #1a1d1a;
+    border: 1px solid #2e322e;
+    color: var(--white);
+    padding: 18px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border 0.2s;
+    width: 100%;
+  }
+
+  .form-input:focus {
+    border-color: var(--green);
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════════════
+     FOOTER
+     ══════════════════════════════════════════════════════════════════════════════ */
+  
+  footer {
+    border-top: 1px solid #1e221e;
+    padding: 32px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════════════
+     SCROLL REVEAL SYSTEM
+     ══════════════════════════════════════════════════════════════════════════════ */
+  
+  /* Direções de entrada */
+  .scroll-bottom {
+    opacity: 0;
+    transition: 1s;
+    transform: translate(0px, 30px);
+  }
+
+  .scroll-top {
+    opacity: 0;
+    transition: 1s;
+    transform: translate(0px, -30px);
+  }
+
+  .scroll-left {
+    opacity: 0;
+    transition: 1s;
+    transform: translate(-30px, 0px);
+  }
+
+  .scroll-right {
+    opacity: 0;
+    transition: 1s;
+    transform: translate(30px, 0px);
+  }
+
+  /* Estado ativado */
+  .ativado {
+    opacity: 1 !important;
+    transition: 1s !important;
+    transform: translate(0px, 0px) !important;
+  }
+
+  /* Delays para efeitos em sequência */
+  .delay-1 { transition-delay: 0.3s; }
+  .delay-2 { transition-delay: 0.6s; }
+  .delay-3 { transition-delay: 0.9s; }
+  .delay-4 { transition-delay: 1.2s; }
+
+  /* ══════════════════════════════════════════════════════════════════════════════
+     RESPONSIVE / MOBILE - APENAS AQUI AS ALTERAÇÕES
+     ══════════════════════════════════════════════════════════════════════════════ */
+  
+  @media (max-width: 1020px) {
+    /* HERO */
+    .hero { 
+      min-height: auto; 
+      max-height: none;
+    }
+
+    .hero-inner {
+      grid-template-columns: 1fr;
+      width: 100% !important;
+      max-width: 100%;
+      min-height: auto;
+      max-height: none;
+    }
+    
+    .hero-right { 
+      min-height: 400px;
+    }
+
+    .hero-visual {
+      width: 100%;
+      height: 400px;
+    }
+
+    .date-badge {
+      left: 5%;
+    }
+
+    .chart-container {
+      width: 90%;
+    }
+
+    .stats-float {
+      position: static;
+      flex-direction: row;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .stat-card {
+      flex: 1;
+    }
+    
+    .hero-left { 
+      padding: 60px 5% 40px; 
+    }
+    
+    /* PROBLEMA */
+    .problema-grid { 
+      grid-template-columns: 1fr; 
+      gap: 40px; 
+    }
+
+    .problema .section-title {
+      width: 100%;
+    }
+
+    .quote-block {
+      position: static;
+      left: auto;
+      top: auto;
+      width: 100%;
+    }
+    
+    /* PROJETO */
+    .projeto-cards { 
+      grid-template-columns: 1fr; 
+    }
+
+    .projeto .section-title {
+      width: 100%;
+    }
+
+    .projeto-header-content {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    
+    /* QUEM */
+    .quem-grid { 
+      grid-template-columns: 1fr; 
+      gap: 40px; 
+    }
+
+    .avatar-block {
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .avatar-placeholder {
+      width: 100%;
+      height: 400px;
+    }
+    
+    /* OFERTA */
+    .oferta .section-title {
+      width: 100%;
+    }
+
+    .price-reveal {
+      width: 100% !important;
+      padding: 32px 20px;
+    }
+
+    .what-you-get {
+      align-items: flex-start;
+    }
+    
+    /* TIMELINE */
+    .timeline-container {
+      padding-left: 60px;
+    }
+
+    .timeline-item::before {
+      left: -40px;
+    }
+
+    .timeline-container::before {
+      left: 20px;
+    }
+    
+    /* STATS */
+    .stats-row { 
+      grid-template-columns: 1fr; 
+    }
+    
+    /* GENERAL */
+    section { 
+      padding: 64px 5%; 
+    }
+    
+    .big-number { 
+      display: none; 
+    }
+
+    /* FORM */
+    .final-cta > div[style*="min-width"] {
+      min-width: 100% !important;
+      width: 100% !important;
+    }
+
+    /* FOOTER */
+    footer {
+      flex-direction: column;
+      gap: 16px;
+      text-align: center;
+    }
+
+    /* Scroll reveal simplificado no mobile */
+    .scroll-bottom,
+    .scroll-top,
+    .scroll-left,
+    .scroll-right {
+      opacity: 0;
+      filter: blur(0px) !important;
+      transition: 0.8s !important;
+      transform: translate(0px, 20px) !important;
+    }
+
+    .ativado {
+      opacity: 1;
+      filter: blur(0px);
+      transition: 0.8s !important;
+      transform: translate(0px, 0px) !important;
+    }
+
+    /* Remove delays no mobile, exceto delay-1-1 */
+    .delay-1 { transition-delay: 0s !important; }
+    .delay-2 { transition-delay: 0s !important; }
+    .delay-3 { transition-delay: 0s !important; }
+    .delay-4 { transition-delay: 0s !important; }
+  }
+
+  @media (max-width: 600px) {
+
+    .what-you-get {
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0px;
+    }
+
+    .wyg-item {
+      flex-direction: column !important;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    .avatar-placeholder {
+      background-position: 0px -50px;
+    }
+
+    .timeline-container::before {
+      left: 18px;
+    }
+
+    .projeto-header, .final-cta p {
+      margin-bottom: 40px;
+    }
+
+    .price-reveal, .quem-grid {
+      margin-top: 28px;
+    }
+
+    .final-cta .section-title {
+      max-width: 200px !important;
+      margin-bottom: 16px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .oferta .section-title {
+      width: 200px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .quem .section-title {
+      width: 320px;
+    }
+
+    .problema .section-title {
+      width: 300px;
+    }
+
+    .projeto .section-title {
+      width: 250px;
+    }
+
+    .stats-float {
+      position: absolute;
+      flex-direction: column !important;
+      width: auto;
+      top: 36%;
+      z-index: 200;
+    }
+
+    .date-badge {
+      left: 1.5%;
+      top: 4%;
+    }
+
+    .hero-right {
+      padding-bottom: 60px;
+      min-height: 500px;
+    }
+
+    .hero-visual {
+      top: 0 !important;
+      transform: translate(-50%,0%) !important;
+      width: 94vw;
+    }
+    .topbar-cta { 
+      padding: 8px 14px; 
+      font-size: 0.7rem; 
+    }
+
+    .hero-title {
+      font-size: 38px;
+      max-width: 380px;
+    }
+
+    .btn-primary {
+      padding: 16px 24px;
+      font-size: 0.85rem;
+    }
+
+    .pain-item {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 16px;
+    }
+
+    .quote-text {
+      font-size: 1.05rem;
+    }
+
+    .proj-card {
+      padding: 28px 20px;
+    }
+
+    .schedule-block {
+      padding: 24px 16px;
+    }
+
+    .timeline-container {
+      padding-left: 50px;
+    }
+
+    .timeline-item {
+      padding-left: 20px;
+    }
+
+    .daily-item {
+      flex-direction: column;
+      padding: 20px 16px;
+    }
+
+    .bio-text {
+      font-size: 0.95rem;
+    }
+
+    .form-input {
+      padding: 16px;
+      font-size: 0.9rem;
+    }
+
+    .final-cta .btn-primary {
+      padding: 18px 28px;
+      font-size: 0.9rem;
+    }
+
+    .section-title {
+      line-height: 0.85em;
+      gap: 10px;
+    }
+  }
+
+    @media (max-width: 417px) {
+    .hero-title {
+      font-size: 32px;
+      max-width: 330px;
+    }
+    .hero-tag {
+      font-size: 0.55rem;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════════════════════
+     HEADER / TOPBAR
+     ══════════════════════════════════════════════════════════════════════════════ -->
+
+<nav class="topbar">
+  <div class="logo">Madruga</div>
+  <a href="#inscricao" class="topbar-cta">Quero minha vaga →</a>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════════════════════════
+     HERO SECTION
+     ══════════════════════════════════════════════════════════════════════════════ -->
+
+<section class="hero">
+  <div class="hero-inner">
+  <div class="hero-left">
+    <p class="hero-tag">01 de junho · 30 dias · 100% gratuito</p>
+    <div class="hero-logo">Projeto Trincheira</div>
+    <h1 class="hero-title" text-split letter-fade>
+      30 dias operando Mini Índice e Mini Dólar ao vivo. <strong>R$3.000 de capital real. 2 contratos. Sem enrolação.</strong>
+    </h1>
+    <div class="cta-block" id="inscricao">
+      <a href="#form" class="btn-primary">
+        Quero entrar na trincheira <span class="btn-arrow">→</span>
+      </a>
+      <p class="free-badge"><span>✓</span> Acesso 100% gratuito · Vagas limitadas</p>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-visual">
+      <div class="glitch-img"></div>
+      <div class="hero-grid-lines"></div>
+    </div>
+
+    <div class="date-badge">01 Jun — 30 Jun 2026</div>
+
+    <!-- Chart SVG animado -->
+    <div class="chart-container">
+      <svg class="chart-svg" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polyline
+          points="0,160 40,145 80,155 120,120 160,130 200,90 240,100 280,60 320,70 360,40 400,30"
+          stroke="#c8f135"
+          stroke-width="2"
+          fill="none"
+          stroke-dasharray="800"
+          stroke-dashoffset="800">
+          <animate attributeName="stroke-dashoffset" from="800" to="0" dur="2s" begin="0.5s" fill="freeze" calcMode="spline" keySplines="0.4 0 0.2 1"/>
+        </polyline>
+        <polyline
+          points="0,160 40,145 80,155 120,120 160,130 200,90 240,100 280,60 320,70 360,40 400,30"
+          stroke="rgba(200,241,53,0.08)"
+          stroke-width="0"
+          fill="rgba(200,241,53,0.06)"/>
+        <!-- Candlesticks decorativos -->
+        <g opacity="0.3">
+          <rect x="20" y="140" width="6" height="20" fill="#c8f135"/>
+          <rect x="60" y="148" width="6" height="14" fill="#c8f135"/>
+          <rect x="100" y="115" width="6" height="22" fill="#c8f135"/>
+          <rect x="140" y="122" width="6" height="18" fill="#c8f135"/>
+          <rect x="180" y="80" width="6" height="28" fill="#c8f135"/>
+          <rect x="220" y="92" width="6" height="16" fill="#c8f135"/>
+          <rect x="260" y="50" width="6" height="24" fill="#c8f135"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="stats-float">
+      <div class="stat-card">
+        <div class="stat-value">R$ 3K</div>
+        <div class="stat-label">Capital operado</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">2x</div>
+        <div class="stat-label">Mini contratos</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">30</div>
+        <div class="stat-label">Dias ao vivo</div>
+      </div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════════
+     DIVIDER TICKER
+     ══════════════════════════════════════════════════════════════════════════════ -->
+
+<div class="divider-strip">
+  <span class="ticker">
+    &nbsp;MINI ÍNDICE &nbsp;·&nbsp; MINI DÓLAR &nbsp;·&nbsp; 30 DIAS AO VIVO &nbsp;·&nbsp; R$3.000 REAL &nbsp;·&nbsp; OPERAÇÕES REAIS &nbsp;·&nbsp; 100% GRATUITO &nbsp;·&nbsp;
+    MINI ÍNDICE &nbsp;·&nbsp; MINI DÓLAR &nbsp;·&nbsp; 30 DIAS AO VIVO &nbsp;·&nbsp; R$3.000 REAL &nbsp;·&nbsp; OPERAÇÕES REAIS &nbsp;·&nbsp; 100% GRATUITO &nbsp;·&nbsp;
+  </span>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════════
+     PROBLEMA SECTION
+     ══════════════════════════════════════════════════════════════════════════════ -->
+
+<section class="problema">
+  <div class="problema-grid">
+    <div>
+      <p class="section-tag scroll-bottom">O problema real</p>
+      <h2 class="section-title" text-split letter-fade>Você sabe a <em>teoria.</em><br>O mercado não liga.</h2>
+      <ul class="pain-list">
+        <li class="pain-item scroll-right">
+          <div class="pain-icon">✕</div>
+          <p class="pain-text"><strong>Cursos cheios de slides e zero operação.</strong> Você aprende a teoria mas nunca vê ninguém executar de verdade, em tempo real, com dinheiro na mesa.</p>
+        </li>
+        <li class="pain-item scroll-right">
+          <div class="pain-icon">✕</div>
+          <p class="pain-text"><strong>Capital pequeno vira desculpa.</strong> Todo mundo fala de R$50k pra cima. Como se com R$3.000 você não pudesse aprender a operar direito.</p>
+        </li>
+        <li class="pain-item scroll-right">
+          <div class="pain-icon">✕</div>
+          <p class="pain-text"><strong>Gestão de risco fica no papel.</strong> Você lê sobre stop loss. Mas na hora do pregão, a emoção fala mais alto. Ninguém te mostra como blindar isso.</p>
+        </li>
+        <li class="pain-item scroll-right">
+          <div class="pain-icon">✕</div>
+          <p class="pain-text"><strong>Operação solo é operar no escuro.</strong> Sem referência de leitura, sem validação de setup, sem ninguém ao lado quando o mercado vira.</p>
+        </li>
+      </ul>
+    </div>
+
+    <div class="problema-right">
+      <div class="quote-block scroll-left">
+        <p class="quote-text">
+          "No mergulho, você não improvisa embaixo d'água. Você segue o checklist ou <strong>morre.</strong> No mercado é igual — só que a maioria dos traders nunca aprendeu a fazer o checklist."
+        </p>
+        <p class="quote-author">— Madruga · Ex-mergulhador profissional · 6 anos operando opções e futuros</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════════
+     PROJETO SECTION
+     ══════════════════════════════════════════════════════════════════════════════ -->
+
+<section class="projeto">
+  <div class="projeto-inner">
+    <div class="projeto-header scroll-bottom">
+      <p class="section-tag">A solução</p>
+      <div class="projeto-header-content">
+        <h2 class="section-title" text-split letter-fade>30 dias dentro<br>da <em>trincheira.</em></h2>
+        <p style="color: #a8b0a8; font-size: 1.05rem; font-weight: 300; line-height: 1.7;">
+          Não é curso. Não é teoria. É o Madruga operando ao vivo, todo dia, do lado de você. Com dinheiro real. Com risco real. Mostrando cada decisão em tempo real.
+        </p>
+      </div>
+    </div>
+
+    <div class="projeto-cards">
+      <div class="proj-card scroll-bottom">
+        <div class="proj-card-num">01</div>
+        <h3 class="proj-card-title">Capital Real</h3>
+        <p class="proj-card-desc">R$ 3.000 de capital operado. Apenas 2 mini contratos. Gestão de risco real, stop fixo definido. Você aprende com o mesmo capital que já tem.</p>
+        <span class="proj-card-tag">R$ 3k · 2 contratos</span>
+      </div>
+      <div class="proj-card scroll-bottom delay-1">
+        <div class="proj-card-num">02</div>
+        <h3 class="proj-card-title">Ao Vivo Todo Dia</h3>
+        <p class="proj-card-desc">Sala de operações aberta de segunda a sexta. Você acompanha o raciocínio, a entrada, o stop, a saída. Sem edição, sem corte, sem enfeite.</p>
+        <span class="proj-card-tag">10h — 11h30</span>
+      </div>
+      <div class="proj-card scroll-bottom delay-2">
+        <div class="proj-card-num">03</div>
+        <h3 class="proj-card-title">Visão Semanal</h3>
+        <p class="proj-card-desc">Toda segunda às 8h o Madruga passa o cenário da semana — leitura de Mini Índice, movimentos esperados e os principais níveis para ficar de olho.</p>
+        <span class="proj-card-tag">Seg · 08h00</span>
+      </div>
+    </div>
+
+    <div class="schedule-block scroll-bottom">
+      <h3 class="schedule-title" text-split letter-fade>Como são os 30 dias</h3>
+      
+      <!-- Timeline vertical -->
+      <div class="timeline-container scroll-bottom">
+        <div class="timeline-item scroll-bottom">
+          <div class="timeline-time">SEG · 08h00</div>
+          <div class="timeline-content">
+            <strong>Live de Panorama Semanal</strong>
+            Visão do Mini Índice, cenário macro e estratégia para a semana
+          </div>
+        </div>
+
+        <div class="timeline-item scroll-bottom">
+          <div class="timeline-time">SEG–QUI · 10h</div>
+          <div class="timeline-content">
+            <strong>Sala Ao Vivo de Trading</strong>
+            Acompanhamento do pregão, operações em tempo real e leitura de mercado
+          </div>
+        </div>
+
+        <div class="timeline-item scroll-bottom">
+          <div class="timeline-time">30/06 · Noite</div>
+          <div class="timeline-content">
+            <strong>Live de Encerramento</strong>
+            Resultado completo dos 30 dias, análise e o próximo passo para quem quer continuar
+          </div>
+        </div>
+      </div>
+
+      <!-- Item diário fora da timeline -->
+      <div class="daily-item scroll-bottom">
+        <div class="daily-badge">Diário</div>
+        <div class="daily-content">
+          <strong>WhatsApp da Comunidade</strong>
+          Avisos de setup, movimentos relevantes e operações do Madruga em tempo real
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════════
+     QUEM É SECTION
+     ══════════════════════════════════════════════════════════════════════════════ -->
+
+<section class="quem">
+  <div style="max-width:1100px; margin:0 auto;">
+    <p class="section-tag scroll-bottom">Quem vai operar com você</p>
+    <h2 class="section-title" text-split letter-fade>Madruga não <em>ensina</em><br>— ele <em>opera.</em></h2>
+
+    <div class="quem-grid">
+      <div class="avatar-block scroll-right">
+        <div class="avatar-placeholder"></div>
+        <div class="avatar-tag">Matheus Medeiros</div>
+      </div>
+
+      <div class="scroll-left">
+        <div class="bio-tags">
+          <span class="bio-tag">6 anos operando</span>
+          <span class="bio-tag">Ex-mergulhador pro</span>
+          <span class="bio-tag">100% do mercado</span>
+          <span class="bio-tag">Mini índice · Mini dólar</span>
+        </div>
+        <p class="bio-text">
+          Madruga não entrou no mercado financeiro pela faculdade ou pelo YouTube. Entrou pela disciplina. <strong>Ex-mergulhador profissional</strong>, aprendeu que sobreviver depende de checklist, gestão de risco e zero improviso. 
+          <br><br>
+          Levou isso para o pregão. <strong>6 anos operando. Vive 100% do mercado.</strong> Já liderou comunidade de traders por 3 anos. O diferencial não é a estratégia — é o método de executar a estratégia quando o mercado está contra você.
+        </p>
+
+        <div class="stats-row">
+          <div class="stat-box">
+            <span class="stat-n">6</span>
+            <span class="stat-l">Anos operando</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-n">3</span>
+            <span class="stat-l">Anos de comunidade</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-n">100%</span>
+            <span class="stat-l">Do mercado</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════════
+     OFERTA SECTION
+     ══════════════════════════════════════════════════════════════════════════════ -->
+
+<section class="oferta">
+  <div class="oferta-inner scroll-bottom">
+    <p class="section-tag">O que você recebe</p>
+    <h2 class="section-title" text-split letter-fade>30 dias.<br><em>Zero reais.</em></h2>
+
+    <div class="price-reveal scroll-bottom">
+      <span class="price-free" text-split letter-fade>GRÁTIS</span>
+      <p class="price-sub scroll-bottom">Sem cartão. Sem cobrança. Sem pegadinha.</p>
+      <div class="price-divider scroll-bottom"></div>
+      <ul class="what-you-get scroll-bottom">
+        <li class="wyg-item"><div class="wyg-icon">✓</div> Acesso ao grupo exclusivo no WhatsApp</li>
+        <li class="wyg-item"><div class="wyg-icon">✓</div> 30 dias de sala ao vivo (10h–11h30)</li>
+        <li class="wyg-item"><div class="wyg-icon">✓</div> Live semanal de panorama toda segunda às 8h</li>
+        <li class="wyg-item"><div class="wyg-icon">✓</div> Operações em tempo real com R$3.000 de capital</li>
+        <li class="wyg-item"><div class="wyg-icon">✓</div> Leitura de mercado e avisos de setup via WhatsApp</li>
+        <li class="wyg-item"><div class="wyg-icon">✓</div> Live de encerramento com resultados no dia 30/06</li>
+      </ul>
+    </div>
+
+    <a href="#form" class="btn-primary scroll-bottom" style="display:inline-flex; margin: 0 auto 20px;">
+      Quero minha vaga no Projeto Trincheira <span class="btn-arrow">→</span>
+    </a>
+    <p class="final-disclaimer scroll-bottom">Início: 01 de junho de 2026 · Encerramento: 30 de junho · Acesso via WhatsApp</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════════
+     URGÊNCIA STRIP
+     ══════════════════════════════════════════════════════════════════════════════ -->
+
+<div class="urgencia-strip scroll-bottom">
+  <p class="urgencia-text">
+    O grupo fecha quando atingir <span>100 membros</span> — depois disso, lista de espera.
+  </p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════════
+     FINAL CTA / FORM
+     ══════════════════════════════════════════════════════════════════════════════ -->
+
+<section class="final-cta" id="form">
+  <h2 class="section-title scroll-bottom" text-split letter-fade>Entra na<br><em>trincheira.</em></h2>
+  <p style="color: #a8b0a8; max-width: 480px; margin: 0 auto 48px; font-weight: 300;" class="scroll-bottom">
+    Preencha seus dados abaixo e garanta sua vaga no Projeto Trincheira. Você receberá o link do grupo no WhatsApp antes do dia 01 de junho.
+  </p>
+
+  <!-- FORM -->
+  <div style="min-width: 640px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px;" class="scroll-bottom">
+    <input type="text" placeholder="Seu nome completo" class="form-input">
+    <input type="tel" placeholder="WhatsApp (com DDD)" class="form-input">
+    <input type="email" placeholder="Seu melhor e-mail" class="form-input">
+    <button class="btn-primary" style="margin-top: 8px; font-size: 1rem; padding: 20px;">
+      Garantir minha vaga agora <span class="btn-arrow">→</span>
+    </button>
+  </div>
+
+  <p class="final-disclaimer" style="margin-top: 24px;">
+    Seus dados são 100% seguros. Zero spam. Prometemos só o que importa.
+  </p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════════
+     FOOTER
+     ══════════════════════════════════════════════════════════════════════════════ -->
+
+<footer>
+  <span>© 2026 Madruga Trading Club</span>
+  <span style="color: #3a3e3a;">Operações envolvem risco. Resultados passados não garantem resultados futuros.</span>
+</footer>
+
+<!-- ══════════════════════════════════════════════════════════════════════════════
+     JAVASCRIPT / ANIMATIONS
+     ══════════════════════════════════════════════════════════════════════════════ -->
+
+<script>
+  // ══════════════════════════════════════════════════════════════════════════════
+  // GSAP ScrollTrigger - Sistema de Scroll Reveal
+  // ══════════════════════════════════════════════════════════════════════════════
+  
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Scroll reveal padrão para elementos
+  const scrolls = document.querySelectorAll('.scroll-bottom, .scroll-top, .scroll-left, .scroll-right');
+  
+  scrolls.forEach(scroll => {
+    ScrollTrigger.create({
+      trigger: scroll,
+      endTrigger: "body",
+      start: "top 84%",
+      toggleClass: "ativado",
+    });
+  });
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // Letter Fade - Efeito de entrada letra por letra para títulos
+  // ══════════════════════════════════════════════════════════════════════════════
+  
+  document.addEventListener("DOMContentLoaded", function () {
+    let splitType = new SplitType("[text-split]", {
+      types: "words, chars",
+      tagName: "span",
+    });
+    
+    let totalDuration = 1.4;
+    let letterFadeElements = document.querySelectorAll("[letter-fade]");
+    
+    letterFadeElements.forEach(function (element) {
+      // Verifica se o elemento está dentro da hero (exceção)
+      let isInHero = element.closest('.hero') !== null;
+      
+      let childLetters = element.querySelectorAll(".char");
+      let tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: element,
+          start: "top 84%",
+          toggleActions: "play none none reverse", // Permite reverter ao sair
+        },
+        defaults: {
+          ease: "power2.out",
+        },
+      });
+      
+      // Se estiver na hero, ativa imediatamente sem scroll trigger
+      if (isInHero) {
+        tl.scrollTrigger.kill(); // Remove scroll trigger da hero
+      }
+      
+      childLetters.forEach(function (childLetter) {
+        let randomDuration = gsap.utils.random(0.6, totalDuration);
+        let maxDelay = totalDuration - randomDuration;
+        let randomDelay = gsap.utils.random(0, maxDelay);
+        
+        tl.from(childLetter, {
+            opacity: 0,
+            duration: randomDuration
+        }, randomDelay);
+      });
+      
+      tl.from(element, {
+          scale: 1.03,
+          duration: totalDuration
+      }, 0);
+      
+      // Se estiver na hero, executa imediatamente
+      if (isInHero) {
+        tl.progress(1);
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
